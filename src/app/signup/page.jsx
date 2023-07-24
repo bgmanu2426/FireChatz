@@ -54,8 +54,8 @@ const Signup = () => {
                 />
                 <input
                     className="w-full bg-c5 h-12 rounded-xl outline-none border-none text-c3 px-5"
-                    type="email"
-                    name="email"
+                    type="password"
+                    name="password"
                     autoComplete="off"
                     placeholder="Password"
                 />

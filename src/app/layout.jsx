@@ -1,4 +1,6 @@
+import { UserProvider } from '@/context/authContext'
 import './globals.css'
+import { StrictMode } from 'react'
 
 export const metadata = {
   title: 'Create Next App',
@@ -7,10 +9,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
-        {children}
-      </body>
-    </html>
+    <StrictMode>
+      <html lang="en">
+        <body>
+          <UserProvider>
+            {children}
+          </UserProvider>
+        </body>
+      </html>
+    </StrictMode>
   )
 }

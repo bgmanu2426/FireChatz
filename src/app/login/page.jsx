@@ -1,12 +1,60 @@
-import React from "react";
+"use client"
+
+import React, { useEffect } from "react";
 import { IoLogoGoogle, IoLogoFacebook } from "react-icons/io"
 import { BsArrowRight } from "react-icons/bs"
 import Link from "next/link";
+import { auth } from "@/firebase/firebase";
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import { useAuth } from "@/context/authContext";
+import { useRouter } from "next/navigation";
+
+const G_Provider = new GoogleAuthProvider();
+const F_Provider = new FacebookAuthProvider();
 
 const Login = () => {
-    return (
+    const router = useRouter();
+    const { currentUser, isLoading } = useAuth();
+
+    useEffect(() => {
+        if (!isLoading && currentUser) {
+            router.push("/");
+        }
+    }, [currentUser, isLoading, router]);
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const email = e.target[0].value;
+        const password = e.target[1].value;
+        try {
+            signInWithEmailAndPassword(auth, email, password)
+            console.log(userCredential.user);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const signInWithGoogle = async () => {
+        try {
+            await signInWithPopup(auth, G_Provider)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const signInWithFacebook = async() => {
+        try {
+            await signInWithPopup(auth, F_Provider)
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    return isLoading || (!isLoading && currentUser) ? "Loader..." : (
         <>
-            <div className="h-screen flex items-center justify-center bg-c1">
+            <div className="h-[100vh] flex items-center justify-center bg-c1">
                 <div className="flex items-center flex-col">
                     <div className="text-center">
                         <div className="text-4xl font-bold">
@@ -19,14 +67,14 @@ const Login = () => {
 
                     <div className="flex items-center gap-2 w-full mt-10 mb-5">
                         <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-                            <div className="flex items-center justify-center gap-3 font-semibold text-white bg-c1 w-full h-full rounded-md">
+                            <div className="flex items-center justify-center gap-3 font-semibold text-white bg-c1 w-full h-full rounded-md" onClick={signInWithGoogle}>
                                 <IoLogoGoogle size={24} />
                                 <span>Login with Google</span>
                             </div>
                         </div>
 
                         <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-                            <div className="flex items-center justify-center gap-3 font-semibold text-white bg-c1 w-full h-full rounded-md">
+                            <div className="flex items-center justify-center gap-3 font-semibold text-white bg-c1 w-full h-full rounded-md" onClick={signInWithFacebook}>
                                 <IoLogoFacebook size={24} />
                                 <span>Login with Facebook</span>
                             </div>
@@ -39,7 +87,7 @@ const Login = () => {
                         <span className="w-5 h-[1px] bg-c3"></span>
                     </div>
 
-                    <form action="" className="flex flex-col items-center gap-3 w-[500px] mt-5">
+                    <form className="flex flex-col items-center gap-3 w-[500px] mt-5" onSubmit={handleSubmit}>
                         <input
                             className="w-full bg-c5 h-12 rounded-xl outline-none border-none text-c3 px-5"
                             type="email"
@@ -48,8 +96,8 @@ const Login = () => {
                         />
                         <input
                             className="w-full bg-c5 h-12 rounded-xl outline-none border-none text-c3 px-5"
-                            type="email"
-                            name="email"
+                            type="password"
+                            name="password"
                             autoComplete="off"
                             placeholder="Password"
                         />

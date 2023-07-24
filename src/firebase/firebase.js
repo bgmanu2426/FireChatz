@@ -1,19 +1,19 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getStorge } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore"
 
 const firebaseConfig = {
-    apiKey: process.env.NEXT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_APP_FIREBASE_DOMAIN,
+    apiKey: "AIzaSyA8e57MngvrGi5dXbXOXmkVodNhJ0_tw84",
+    authDomain: "next-chat-app-89891.firebaseapp.com",
     projectId: "next-chat-app-89891",
     storageBucket: "next-chat-app-89891.appspot.com",
     messagingSenderId: "916868416986",
-    appId: process.env.NEXT_APP_FIREBASE_APP_ID
+    appId: "916868416986:web:9f58274f5546c471306ce3"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const storage = getStorge(app); 
+export const storage = getStorage(app); 
 export const db = getFirestore(app);
