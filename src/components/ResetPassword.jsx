@@ -3,14 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import { BsArrowRight } from "react-icons/bs"
-import ToastMessage from "@/components/ToastMessage";
 
 const ResetPasswordComponent = (props) => {
     const { resetPassword, userEmail, setUserEmail } = props;
     return (
         <>
             <div className="h-screen flex items-center justify-center bg-c1">
-                <ToastMessage />
                 <div className="flex items-center flex-col">
                     <div className="text-center">
                         <div className="text-4xl font-bold">

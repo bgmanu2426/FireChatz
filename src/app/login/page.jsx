@@ -2,7 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { auth } from "@/firebase/firebase";
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import {
+    signInWithEmailAndPassword,
+    GoogleAuthProvider,
+    signInWithPopup,
+    FacebookAuthProvider
+} from "firebase/auth";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import LoginComponent from "@/components/Login";
@@ -26,12 +31,11 @@ const Login = () => {
     }, [currentUser, isLoading, router]);
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const { email, password } = userDetails;
         try {
-            signInWithEmailAndPassword(auth, email, password)
-            console.log(userCredential.user);
+            await signInWithEmailAndPassword(auth, email, password)
         } catch (error) {
             console.log(error);
         }
@@ -54,7 +58,7 @@ const Login = () => {
     }
 
     return isLoading || (!isLoading && currentUser) ? "Loader..." : (
-    <LoginComponent userDetails={userDetails} setuserDetails={setuserDetails} signInWithGoogle={signInWithGoogle} signInWithFacebook={signInWithFacebook} handleSubmit={handleSubmit} />
+        <LoginComponent userDetails={userDetails} setuserDetails={setuserDetails} signInWithGoogle={signInWithGoogle} signInWithFacebook={signInWithFacebook} handleSubmit={handleSubmit} />
     );
 };
 

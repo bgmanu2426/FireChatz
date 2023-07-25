@@ -3,6 +3,7 @@
 import { UserProvider } from '@/context/authContext'
 import './globals.css'
 import { StrictMode } from 'react'
+import ToastMessage from '@/components/ToastMessage'
 
 export const metadata = {
   title: 'Create Next App',
@@ -15,6 +16,7 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body>
           <UserProvider>
+            <ToastMessage/>
             {children}
           </UserProvider>
         </body>

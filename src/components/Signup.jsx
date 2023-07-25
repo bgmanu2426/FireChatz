@@ -6,7 +6,7 @@ import { BsArrowRight } from "react-icons/bs"
 import Link from "next/link";
 
 const SignupComponent = (props) => {
-    const { userDetails, setUserDetails } = props;
+    const { userDetails, setUserDetails, handleSubmit, signInWithGoogle, signInWithFacebook } = props;
     return (
         <div className="h-screen flex items-center justify-center bg-c1">
             <div className="flex items-center flex-col">
@@ -21,14 +21,14 @@ const SignupComponent = (props) => {
 
                 <div className="flex items-center gap-2 w-full mt-10 mb-5">
                     <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-                        <div className="flex items-center justify-center gap-3 font-semibold text-white bg-c1 w-full h-full rounded-md">
+                        <div className="flex items-center justify-center gap-3 font-semibold text-white bg-c1 w-full h-full rounded-md" onClick={signInWithGoogle}>
                             <IoLogoGoogle size={24} />
                             <span>Login with Google</span>
                         </div>
                     </div>
 
                     <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-                        <div className="flex items-center justify-center gap-3 font-semibold text-white bg-c1 w-full h-full rounded-md">
+                        <div className="flex items-center justify-center gap-3 font-semibold text-white bg-c1 w-full h-full rounded-md" onClick={signInWithFacebook}>
                             <IoLogoFacebook size={24} />
                             <span>Login with Facebook</span>
                         </div>
@@ -41,7 +41,7 @@ const SignupComponent = (props) => {
                     <span className="w-5 h-[1px] bg-c3"></span>
                 </div>
 
-                <form className="flex flex-col items-center gap-3 w-[500px] mt-5">
+                <form className="flex flex-col items-center gap-3 w-[500px] mt-5" onSubmit={handleSubmit}>
                     <input
                         className="w-full bg-c5 h-12 rounded-xl outline-none border-none text-c3 px-5"
                         type="text"
@@ -81,7 +81,7 @@ const SignupComponent = (props) => {
                     <span>Already have an account?</span>
                     <Link href={"/login"} className="font-semibold text-white underline underline-offset-2 cursor-pointer">Login</Link>
                 </div>
-                
+
             </div>
         </div>
     )
