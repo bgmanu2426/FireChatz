@@ -1,3 +1,5 @@
+"use client"
+
 import { UserProvider } from '@/context/authContext'
 import './globals.css'
 import { StrictMode } from 'react'
