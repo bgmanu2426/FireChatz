@@ -1,7 +1,8 @@
 "use client"
 
-import { auth } from "@/firebase/firebase";
+import { auth, db } from "@/firebase/firebase";
 import { onAuthStateChanged, signOut as authSignOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react"
 
 const UserContext = createContext();
@@ -15,13 +16,14 @@ export const UserProvider = ({ children }) => {
         setCurrentUser(null);
     }
 
-    const authStateChanged = (user) => {
+    const authStateChanged = async(user) => {
         setIsLoading(true);
         if (!user) {
             clear();
             return;
         }
-        setCurrentUser(user);
+        const userData = await getDoc(doc(db, "users", user.uid));
+        setCurrentUser(userData.data());
         setIsLoading(false);
     }
 

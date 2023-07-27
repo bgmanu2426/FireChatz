@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { auth } from "@/firebase/firebase";
 import {
     signInWithEmailAndPassword,
@@ -11,6 +11,8 @@ import {
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import LoginComponent from "@/components/Login";
+import { toast } from "react-toastify";
+import Loader from "@/components/Loader";
 
 const G_Provider = new GoogleAuthProvider();
 const F_Provider = new FacebookAuthProvider();
@@ -37,7 +39,7 @@ const Login = () => {
         try {
             await signInWithEmailAndPassword(auth, email, password)
         } catch (error) {
-            console.log(error);
+            toast.error((error.message).split(":")[1]);
         }
     }
 
@@ -57,8 +59,10 @@ const Login = () => {
         }
     }
 
-    return isLoading || (!isLoading && currentUser) ? "Loader..." : (
-        <LoginComponent userDetails={userDetails} setuserDetails={setuserDetails} signInWithGoogle={signInWithGoogle} signInWithFacebook={signInWithFacebook} handleSubmit={handleSubmit} />
+    return (
+        <Suspense fallback={<Loader />}>
+            <LoginComponent userDetails={userDetails} setuserDetails={setuserDetails} signInWithGoogle={signInWithGoogle} signInWithFacebook={signInWithFacebook} handleSubmit={handleSubmit} />
+        </Suspense>
     );
 };
 

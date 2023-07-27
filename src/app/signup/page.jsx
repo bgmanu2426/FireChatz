@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/authContext";
 import { auth, db } from "@/firebase/firebase";
@@ -15,6 +15,8 @@ import {
 import SignupComponent from "@/components/Signup";
 import { doc, setDoc } from "firebase/firestore";
 import { profileColors } from "@/utils/constants";
+import { toast } from "react-toastify";
+import Loader from "@/components/Loader";
 
 
 const G_Provider = new GoogleAuthProvider();
@@ -51,12 +53,11 @@ const Signup = () => {
                 username,
                 email,
                 userId: user.uid,
-                color: profileColors[colorIndex],
-                photoURL: "https://w7.pngwing.com/pngs/419/473/png-transparent-computer-icons-user-profile-login-user-heroes-sphere-black-thumbnail.png"
+                color: profileColors[colorIndex]
             })
             await setDoc(doc(db, "userChats", user.uid), {})
         } catch (error) {
-            console.log(error);
+            toast.error((error.message).split(":")[1]);
         }
     }
 
@@ -76,8 +77,10 @@ const Signup = () => {
         }
     }
 
-    return isLoading || (!isLoading && currentUser) ? "Loader..." : (
-        <SignupComponent userDetails={userDetails} setUserDetails={setUserDetails} signInWithGoogle={signInWithGoogle} signInWithFacebook={signInWithFacebook} handleSubmit={handleSubmit} />
+    return (
+        <Suspense fallback={<Loader />}>
+            <SignupComponent userDetails={userDetails} setUserDetails={setUserDetails} signInWithGoogle={signInWithGoogle} signInWithFacebook={signInWithFacebook} handleSubmit={handleSubmit} />
+        </Suspense>
     );
 };
 

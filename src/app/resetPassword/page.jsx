@@ -5,8 +5,12 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
+import Loader from "@/components/Loader";
+import { useAuth } from "@/context/authContext";
 
 const ResetPassword = () => {
+    const { currentUser, isLoading } = useAuth();
+
     const [userEmail, setUserEmail] = useState("");
 
     const resetPassword = async (e) => {
@@ -25,7 +29,7 @@ const ResetPassword = () => {
             console.log(error);
         }
     }
-    return (
+    return isLoading || (!isLoading && currentUser) ? <Loader/> : (
         <>
             <ResetPasswordComponent resetPassword={resetPassword} userEmail={userEmail} setUserEmail={setUserEmail} />
         </>
