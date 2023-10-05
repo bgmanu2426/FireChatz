@@ -1,18 +1,18 @@
 "use client"
 
 import React, { Suspense, useEffect, useState } from "react";
-import { auth } from "@/firebase/firebase";
+import { auth } from "../../firebase/firebase";
 import {
     signInWithEmailAndPassword,
     GoogleAuthProvider,
     signInWithPopup,
     FacebookAuthProvider
 } from "firebase/auth";
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "../../context/authContext";
 import { useRouter } from "next/navigation";
-import LoginComponent from "@/components/Login";
+import LoginComponent from "../../components/Login";
 import { toast } from "react-toastify";
-import Loader from "@/components/Loader";
+import Loader from "../../components/Loader";
 
 const G_Provider = new GoogleAuthProvider();
 const F_Provider = new FacebookAuthProvider();

@@ -1,10 +1,10 @@
 "use client"
 
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "../context/authContext";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Loader from "@/components/Loader";
-import LeftNavComponent from "@/components/LeftNav";
+import Loader from "../components/Loader";
+import LeftNavComponent from "../components/LeftNav";
 
 const Home = () => {
   const router = useRouter();

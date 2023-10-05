@@ -1,12 +1,12 @@
 "use client"
 
-import ResetPasswordComponent from "@/components/ResetPassword";
+import ResetPasswordComponent from "../../components/ResetPassword";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
-import Loader from "@/components/Loader";
-import { useAuth } from "@/context/authContext";
+import Loader from "../../components/Loader";
+import { useAuth } from "../../context/authContext";
 
 const ResetPassword = () => {
     const { currentUser, isLoading } = useAuth();

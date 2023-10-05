@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/context/authContext";
-import { auth, db } from "@/firebase/firebase";
+import { useAuth } from "../../context/authContext";
+import { auth, db } from "../../firebase/firebase";
 import {
     createUserWithEmailAndPassword,
     GoogleAuthProvider,
@@ -12,11 +12,11 @@ import {
     updateProfile,
     sendEmailVerification
 } from "firebase/auth";
-import SignupComponent from "@/components/Signup";
+import SignupComponent from "../../components/Signup";
 import { doc, setDoc } from "firebase/firestore";
-import { profileColors } from "@/utils/constants";
+import { profileColors } from "../../utils/constants";
 import { toast } from "react-toastify";
-import Loader from "@/components/Loader";
+import Loader from "../../components/Loader";
 
 
 const G_Provider = new GoogleAuthProvider();
