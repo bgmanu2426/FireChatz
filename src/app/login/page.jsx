@@ -5,7 +5,7 @@ import { auth } from "../../firebase/firebase";
 import {
     signInWithEmailAndPassword,
     GoogleAuthProvider,
-    signInWithPopup,
+    signInWithRedirect,
     FacebookAuthProvider
 } from "firebase/auth";
 import { useAuth } from "../../context/authContext";
@@ -45,7 +45,7 @@ const Login = () => {
 
     const signInWithGoogle = async () => {
         try {
-            await signInWithPopup(auth, G_Provider)
+            await signInWithRedirect(auth, G_Provider)
         } catch (error) {
             console.log(error);
         }
@@ -53,7 +53,7 @@ const Login = () => {
 
     const signInWithFacebook = async () => {
         try {
-            await signInWithPopup(auth, F_Provider)
+            await signInWithRedirect(auth, F_Provider)
         } catch (error) {
             console.log(error)
         }
