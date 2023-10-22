@@ -10,18 +10,34 @@ const AvatarComponent = (props) => {
         <>
             <div className={`${c} rounded-full flex justify-center items-center text-base shrink-0 relative`}
                 style={{ backgroundColor: user?.color }} onClick={onClick}>
-                <div>
-                    {user?.photoURL
-                        ?
-                        <div className={`${c} overflow-hidden rounded-full`}>
-                            <Image src={user?.photoURL} width={s} height={s} alt="Avatar" className="rounded-full" />
-                        </div>
-                        :
-                        <div className={`${f} uppercase font-semibold`}>
-                            {user.username.charAt(0)}
-                        </div>
-                    }
-                </div>
+
+                {user?.online && (
+                    <>
+                        {
+                            size === 'medium' || size === 'large' &&
+                            <span
+                                className="w-[10px] h-[10px] bg-green-500 rounded-full absolute bottom-[2px] right-[2px]"
+                            />
+                        }
+                        {
+                            size === 'xlarge' &&
+                            <span
+                                className="w-[12px] h-[12px] bg-green-500 rounded-full absolute bottom-[3px] right-[3px]"
+                            />
+                        }
+                    </>
+                )}
+
+                {user?.photoURL
+                    ?
+                    <div className={`${c} overflow-hidden rounded-full`}>
+                        <Image src={user?.photoURL} width={s} height={s} alt="Avatar" className="object-cover object-center w-full h-full" />
+                    </div>
+                    :
+                    <div className={`${f} uppercase font-semibold`}>
+                        {user.username.charAt(0)}
+                    </div>
+                }
             </div>
         </>
     )
