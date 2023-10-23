@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation"
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../contexts/authContext";
 import { auth, db } from "../../firebase/firebase";
 import {
     createUserWithEmailAndPassword,

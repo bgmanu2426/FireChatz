@@ -1,9 +1,10 @@
 "use client"
 
-import { UserProvider } from '../context/authContext'
+import { UserProvider } from '../contexts/authContext'
 import './globals.css'
 import { StrictMode } from 'react'
 import ToastMessage from '../components/ToastMessage'
+import { ChatProvider } from '@/contexts/chatContext'
 
 const metadata = {
   title: 'Create Next App',
@@ -16,8 +17,10 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body>
           <UserProvider>
-            <ToastMessage/>
-            {children}
+            <ChatProvider>
+              <ToastMessage />
+              {children}
+            </ChatProvider>
           </UserProvider>
         </body>
       </html>

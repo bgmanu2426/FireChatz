@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import Loader from "../../components/Loader";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../contexts/authContext";
 
 const ResetPassword = () => {
     const { currentUser, isLoading } = useAuth();

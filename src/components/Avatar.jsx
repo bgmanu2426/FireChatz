@@ -11,7 +11,7 @@ const AvatarComponent = (props) => {
             <div className={`${c} rounded-full flex justify-center items-center text-base shrink-0 relative`}
                 style={{ backgroundColor: user?.color }} onClick={onClick}>
 
-                {user?.online && (
+                {user?.isOnline && (
                     <>
                         {
                             size === 'medium' || size === 'large' &&

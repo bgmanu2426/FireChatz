@@ -8,7 +8,7 @@ import {
     signInWithRedirect,
     FacebookAuthProvider
 } from "firebase/auth";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../contexts/authContext";
 import { useRouter } from "next/navigation";
 import LoginComponent from "../../components/Login";
 import { toast } from "react-toastify";

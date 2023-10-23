@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BiCheck, BiEdit } from "react-icons/bi";
 import AvatarComponent from "./Avatar";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "@/contexts/authContext";
 import IconComponent from "./Icon";
 import { FiPlus } from "react-icons/fi";
 import { IoLogOutOutline, IoClose } from "react-icons/io5";
@@ -19,9 +19,9 @@ import UsersPopup from "./popup/UsersPopup";
 const LeftNavComponent = () => {
     const { currentUser, signOut, setCurrentUser } = useAuth();
 
-    const [editProfile, setEditProfile] = useState(false);
-    const [nameEdited, setNameEdited] = useState(false);
-    const [usersPopup, setUsersPopup] = useState(false);
+    const [editProfile, setEditProfile] = useState(false); // edit profile popup
+    const [nameEdited, setNameEdited] = useState(false); // name is edited or not
+    const [usersPopup, setUsersPopup] = useState(false); // users popup
 
 
     const handleUpdateProfile = (type, value) => {
@@ -252,19 +252,15 @@ const LeftNavComponent = () => {
                     </div>
                 )}
 
-                <div
-                    className={`flex gap-5 ${editProfile ? "ml-5" : "flex-col items-center"
-                        }`}
-                >
+                <div className={`flex gap-5 ${editProfile ? "ml-5" : "flex-col items-center"}`}>
                     <IconComponent
                         size={"large"}
                         className={"bg-green-500 hover:bg-gray-600"}
                         icon={<FiPlus size={24} />}
-                        onClick={(e) => {
+                        onClick={() => {
                             setUsersPopup(!usersPopup);
                         }}
                     />
-
                     <IconComponent
                         size={"large"}
                         className={"hover:bg-c2"}
@@ -272,7 +268,13 @@ const LeftNavComponent = () => {
                         onClick={signOut}
                     />
                 </div>
-                {usersPopup && <UsersPopup />}
+
+                {usersPopup &&
+                    <UsersPopup onHide={() => {
+                        setUsersPopup(false);
+                    }} title={"Find Users"} />
+                }
+
             </div>
         </>
     );

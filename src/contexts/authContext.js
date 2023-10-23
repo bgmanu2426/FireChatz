@@ -3,7 +3,7 @@
 import { auth, db } from "../firebase/firebase";
 import { onAuthStateChanged, signOut as authSignOut } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { createContext, use, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
 const UserContext = createContext();
 
@@ -15,7 +15,8 @@ export const UserProvider = ({ children }) => {
         try {
             if (currentUser) {
                 await updateDoc(doc(db, "users", currentUser.userId), {
-                    isOnline: false
+                    isOnline: false,
+                    lastSeen: new Date()
                 });
             }
             setIsLoading(false);

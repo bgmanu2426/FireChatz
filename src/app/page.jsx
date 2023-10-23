@@ -1,10 +1,11 @@
 "use client"
 
-import { useAuth } from "../context/authContext";
+import { useAuth } from "../contexts/authContext";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "../components/Loader";
 import LeftNavComponent from "../components/LeftNav";
+import ChatsComponent from "@/components/Chats";
 
 const Home = () => {
   const router = useRouter();
@@ -23,7 +24,11 @@ const Home = () => {
           <LeftNavComponent />
 
           <div className="flex bg-c2 grow">
-            <div>Sidebar</div>
+            <div className="w-[400px] p-5 overflow-auto scrollbar shrink-0 border-r border-white/[0.05]">
+              <div className="flex flex-col h-full">
+                <ChatsComponent />
+              </div>
+            </div>
             <div>Chat</div>
           </div>
 
