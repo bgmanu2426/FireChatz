@@ -7,6 +7,9 @@ import { useAuth } from "./authContext";
 
 export const ChatProvider = ({ children }) => {
     const [users, setUsers] = useState(false);
+    const [chats, setChats] = useState([]);
+    const [selectedChat, setSelectedChat] = useState(null);
+
     const { currentUser } = useAuth();
 
     const INITIAL_STATE = {
@@ -33,7 +36,11 @@ export const ChatProvider = ({ children }) => {
             users,
             setUsers,
             data: state,
-            dispatch
+            dispatch,
+            chats,
+            setChats,
+            selectedChat,
+            setSelectedChat
         }}>
             {children}
         </ChatContext.Provider>
