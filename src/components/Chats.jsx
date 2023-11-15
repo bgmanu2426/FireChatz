@@ -1,15 +1,17 @@
 import { useChatContext } from "@/contexts/chatContext";
 import { db } from "@/firebase/firebase";
-import { collection, doc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { Timestamp, collection, doc, onSnapshot } from "firebase/firestore";
+import React, { use, useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import AvatarComponent from "./Avatar";
 import { useAuth } from "@/contexts/authContext";
+import { formatDate } from "@/utils/helpers";
+import { handleClientScriptLoad } from "next/script";
 
 const ChatsComponent = () => {
     const [search, setSearch] = useState("");
 
-    const { users, setUsers, chats, setChats, selectedChat, setSelectedChat } = useChatContext();
+    const { users, setUsers, chats, setChats, selectedChat, setSelectedChat, dispatch } = useChatContext();
 
     const { currentUser } = useAuth();
 
@@ -33,9 +35,24 @@ const ChatsComponent = () => {
                 }
             });
         }
+        currentUser.userId && getChats();
+    }, []);
 
-        currentUser.userId && getChats()
-    }, [setChats]);
+    const filteredUsers = Object.entries(chats || {})
+        .filter(([, chat]) =>
+            chat?.userInfo?.username
+                .toLowerCase()
+                .includes(search.toLowerCase()) ||
+            chat?.lastMessage?.text
+                .toLowerCase()
+                .includes(search.toLowerCase())
+        ) // filter chats by search
+        .sort((a, b) => b[1].messagingFrom - a[1].messagingFrom); // sort by last message
+
+    const handleSelect = (user, selectedChatId) => {
+        setSelectedChat(user);
+        dispatch({ type: "CHANGE_USER", payload: user });
+    }
 
     return (
         <div className="flex flex-col h-full">
@@ -50,17 +67,34 @@ const ChatsComponent = () => {
             </div>
 
             <ul className="flex flex-col w-full my-5 gap-[2px]">
-                <li className={`h-[90px] flex items-center gap-4 hover:bg-c1 p-4 cursor-pointer rounded-3xl bg-c1`}>
-                    <AvatarComponent size="large" user={currentUser} />
-                    <div className="flex flex-col gap-1 grow relative">
-                        <span className="text-base text-white flex items-center justify-between">
-                            <div className="font-medium">{currentUser.username}</div>
-                            <div className="text-xs text-c3">date</div>
-                        </span>
-                        <p className="text-sm text-c3 line-clamp-1 break-all">Last message</p>
-                        <span className="absolute right-0 top-8 min-w-[18px] h-[18px] rounded-full bg-red-500 flex items-center justify-center text-sm">5</span>
-                    </div>
-                </li>
+                {
+                    Object.keys(users || {}).length > 0 && filteredUsers?.map((chat) => {
+                        const timestamp = new Timestamp(chat[1].messagingFrom.seconds, chat[1].messagingFrom.nanoseconds); // get timestamp from last message in chat from firestore
+                        const date = timestamp.toDate(); // convert timestamp to date
+                        const user = users[chat[1].userInfo.userId]; // get user info by userId from users object
+                        return (
+                            <li
+                                key={chat[0]}
+                                onClick={() => handleSelect(
+                                    user, chat[0]
+                                )}
+                                className={`h-[90px] flex items-center gap-4 hover:bg-c1 p-4 cursor-pointer rounded-3xl ${selectedChat?.userId === user?.userId && "bg-c1"}`}
+                            >
+                                <AvatarComponent size="large" user={user} />
+                                <div className="flex flex-col gap-1 grow relative">
+                                    <span className="text-base text-white flex items-center justify-between">
+                                        <div className="font-medium">{user?.username}</div>
+                                        <div className="text-xs text-c3">{formatDate(date)}</div>
+                                    </span>
+                                    <p className="text-sm text-c3 line-clamp-1 break-all">
+                                        {chat[1].lastMessage?.text || (chat[1].lastMessage?.img && "image") || "Send first message"}
+                                    </p>
+                                    <span className="absolute right-0 top-8 min-w-[18px] h-[18px] rounded-full bg-red-500 flex items-center justify-center text-sm">5</span>
+                                </div>
+                            </li>
+                        )
+                    })
+                }
             </ul>
         </div>
     )
