@@ -5,11 +5,14 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "../components/Loader";
 import LeftNavComponent from "../components/LeftNav";
-import ChatsComponent from "@/components/Chats";
+import UserChatsComponent from "@/components/UserChats";
+import ChatComponent from "@/components/Chat";
+import { useChatContext } from "@/contexts/chatContext";
 
 const Home = () => {
   const router = useRouter();
   const { signOut, currentUser, isLoading } = useAuth();
+  const { data } = useChatContext();
 
   useEffect(() => {
     if (!isLoading && !currentUser) {
@@ -26,10 +29,12 @@ const Home = () => {
           <div className="flex bg-c2 grow">
             <div className="w-[400px] p-5 overflow-auto scrollbar shrink-0 border-r border-white/[0.05]">
               <div className="flex flex-col h-full">
-                <ChatsComponent />
+                <UserChatsComponent />
               </div>
             </div>
-            <div>Chat</div>
+            <div>
+              {data.user && <ChatComponent />}
+            </div>
           </div>
 
         </div>

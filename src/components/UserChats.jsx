@@ -1,19 +1,21 @@
 import { useChatContext } from "@/contexts/chatContext";
 import { db } from "@/firebase/firebase";
 import { Timestamp, collection, doc, onSnapshot } from "firebase/firestore";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import AvatarComponent from "./Avatar";
 import { useAuth } from "@/contexts/authContext";
 import { formatDate } from "@/utils/helpers";
-import { handleClientScriptLoad } from "next/script";
 
-const ChatsComponent = () => {
+const UserChatsComponent = () => {
     const [search, setSearch] = useState("");
 
     const { users, setUsers, chats, setChats, selectedChat, setSelectedChat, dispatch } = useChatContext();
-
     const { currentUser } = useAuth();
+
+    // Uncomment this code to select first chat on first render
+    // const isBlockExecutableRef = useRef(false);
+    // const isUsersFetchedRef = useRef(false);
 
     useEffect(() => {
         onSnapshot(collection(db, "users"),
@@ -23,6 +25,9 @@ const ChatsComponent = () => {
                     updatedUsers[doc.id] = doc.data();
                 });
                 setUsers(updatedUsers);
+                // if (!isBlockExecutableRef.current) {
+                //     isUsersFetchedRef.current = true;
+                // }
             });
     }, [setUsers]);
 
@@ -32,11 +37,21 @@ const ChatsComponent = () => {
                 if (doc.exists()) {
                     const data = doc.data();
                     setChats(data);
+
+                    // if (!isBlockExecutableRef.current && isUsersFetchedRef.current && users) {
+                    //     const firstChat = Object.values(data)
+                    //         .sort((a, b) => b.messagingFrom - a.messagingFrom)[0];
+                    //     if (firstChat) {
+                    //         const user = users[firstChat?.userInfo?.userId];
+                    //         handleSelect(user);
+                    //     }
+                    //     isBlockExecutableRef.current = true;
+                    // }
                 }
             });
         }
         currentUser.userId && getChats();
-    }, []);
+    }, [currentUser.userId, setChats]);
 
     const filteredUsers = Object.entries(chats || {})
         .filter(([, chat]) =>
@@ -69,7 +84,7 @@ const ChatsComponent = () => {
             <ul className="flex flex-col w-full my-5 gap-[2px]">
                 {
                     Object.keys(users || {}).length > 0 && filteredUsers?.map((chat) => {
-                        const timestamp = new Timestamp(chat[1].messagingFrom.seconds, chat[1].messagingFrom.nanoseconds); // get timestamp from last message in chat from firestore
+                        const timestamp = new Timestamp(chat[1].messagingFrom?.seconds, chat[1].messagingFrom?.nanoseconds); // get timestamp from last message in chat from firestore
                         const date = timestamp.toDate(); // convert timestamp to date
                         const user = users[chat[1].userInfo.userId]; // get user info by userId from users object
                         return (
@@ -100,4 +115,4 @@ const ChatsComponent = () => {
     )
 };
 
-export default ChatsComponent;
+export default UserChatsComponent;
