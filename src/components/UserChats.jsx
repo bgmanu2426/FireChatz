@@ -1,7 +1,7 @@
 import { useChatContext } from "@/contexts/chatContext";
 import { db } from "@/firebase/firebase";
 import { Timestamp, collection, doc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import AvatarComponent from "./Avatar";
 import { useAuth } from "@/contexts/authContext";

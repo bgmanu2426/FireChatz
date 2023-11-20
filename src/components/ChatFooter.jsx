@@ -8,6 +8,7 @@ import ClickAwayListener from "react-click-away-listener";
 import { useChatContext } from "@/contexts/chatContext";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
+import { MdDeleteForever } from "react-icons/md";
 
 const ChatFooterComponent = () => {
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -31,6 +32,20 @@ const ChatFooterComponent = () => {
 
     return (
         <div className="flex items-center bg-c1/[0.5] p-2 rounded-xl relative">
+            {
+                attachmentPreview && <div className="absolute w-[100px] h-[100px] bottom-16 left-0 bg-c1 p-2 rounded-md">
+                    <Image src={attachmentPreview} alt={"attachment"} width={80} height={80} />
+                    <div
+                        className="w-6 h-6 rounded-full bg-red-500 flex justify-center items-center absolute -right-2 -top-2 cursor-pointer"
+                        onClick={() => {
+                            setAttachment(null);
+                            setAttachmentPreview(null);
+                        }}
+                    >
+                        <MdDeleteForever size={14} />
+                    </div>
+                </div>
+            }
             <div className="shrink-0">
                 <input
                     type="file"

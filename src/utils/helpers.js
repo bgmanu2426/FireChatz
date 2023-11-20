@@ -9,3 +9,10 @@ export const formatDate = (date) => {
     if (diff < 1000 * 60 * 60 * 24) return moment(date).format("h:mm A"); // If less than a day then return the number of hours
     return moment(date).format("DD/MM/YY"); // Otherwise return the date
 }
+
+export const wrapEmojisInHtmlTag = (messageText) => {
+    const regexEmoji = /(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu; // regex to match all Unicode emojis
+    return messageText.replace(regexEmoji, (match) => {
+        return `<span style="font-size:1.5em;margin:0 2px;position:relative;top:2px">${match}</span>`;
+    });
+}; // Wrap emojis in a span tag with some styling
