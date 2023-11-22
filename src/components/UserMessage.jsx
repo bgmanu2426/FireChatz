@@ -4,7 +4,7 @@ import AvatarComponent from "./Avatar";
 import { useChatContext } from "@/contexts/chatContext";
 import Image from "next/image";
 import ImageViewer from "react-simple-image-viewer"
-import { Timestamp, doc, getDoc } from "firebase/firestore";
+import { Timestamp, doc, getDoc, updateDoc } from "firebase/firestore";
 import { formatDate, wrapEmojisInHtmlTag } from "@/utils/helpers";
 import IconComponent from "./Icon";
 import { GoChevronDown } from "react-icons/go";
@@ -38,11 +38,23 @@ const UserMessageComponent = ({ msg }) => {
 
             const updatedMessages = chatDoc.data().messages.map((message) => {
                 if (message.id === messageId) {
-                    if(actionType === DELETED_FOR_ME) {
-                        
+                    if (actionType === DELETED_FOR_ME) {
+                        message.deletedInfo = {
+                            [currentUser.userId]: DELETED_FOR_ME
+                        }
+                    } else if (actionType === DELETED_FOR_EVERYONE) {
+                        message.deletedInfo = {
+                            deletedForEveryone: true
+                        }
                     }
-                }
+                } return message;
             });
+
+            await updateDoc(chatRef, {
+                messages: updatedMessages
+            });
+
+            setShowDeletePopup(false);
         } catch (error) {
             console.error(error)
         }
