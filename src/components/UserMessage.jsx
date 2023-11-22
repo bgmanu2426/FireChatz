@@ -15,7 +15,7 @@ import { DELETED_FOR_EVERYONE, DELETED_FOR_ME } from "@/utils/constants";
 
 const UserMessageComponent = ({ msg }) => {
     const { currentUser } = useAuth();
-    const { users, data, imageViewer, setImageViewer } = useChatContext();
+    const { users, data, imageViewer, setImageViewer, setEditMessage } = useChatContext();
 
     const [showMenu, setShowMenu] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false)
@@ -124,6 +124,7 @@ const UserMessageComponent = ({ msg }) => {
                                 setShowMenu={setShowMenu}
                                 showMenu={showMenu}
                                 deleteMsgPopupHandle={deleteMsgPopupHandle}
+                                setEditMessage={() => setEditMessage(msg)}
                             />
                         }
                     </div>

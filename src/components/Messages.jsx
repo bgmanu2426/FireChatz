@@ -18,9 +18,18 @@ const MessagesComponent = () => {
                 if (doc.exists()) {
                     setMessages(doc.data().messages);
                 }
+
+                setTimeout(() => {
+                    scrollToBottom();
+                }, 0);
             });
         return () => unsub();
     }, [data.chatId]);
+
+    const scrollToBottom = () => {
+        const chatContainer = ref.current;
+        chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+    }
 
     return (
         <div

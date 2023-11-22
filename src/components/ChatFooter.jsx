@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import IconComponent from "./Icon";
 import { CgAttachment } from "react-icons/cg";
 import { HiOutlineEmojiHappy } from "react-icons/hi";
-import ComposebarComponent from "./Composebar";
+import ChatInputBarComponent from "./ChatInputBar";
 import EmojiPicker from "emoji-picker-react";
 import ClickAwayListener from "react-click-away-listener";
 import { useChatContext } from "@/contexts/chatContext";
@@ -94,7 +94,7 @@ const ChatFooterComponent = () => {
                 <IoClose size={16} className="text-white" />
             </div>}
 
-            <ComposebarComponent />
+            <ChatInputBarComponent />
         </div>
     );
 };

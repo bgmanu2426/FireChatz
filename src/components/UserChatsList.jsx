@@ -7,7 +7,7 @@ import AvatarComponent from "./Avatar";
 import { useAuth } from "@/contexts/authContext";
 import { formatDate } from "@/utils/helpers";
 
-const UserChatsComponent = () => {
+const UserChatsListComponent = () => {
     const [search, setSearch] = useState("");
 
     const { users, setUsers, chats, setChats, selectedChat, setSelectedChat, dispatch } = useChatContext();
@@ -115,4 +115,4 @@ const UserChatsComponent = () => {
     )
 };
 
-export default UserChatsComponent;
+export default UserChatsListComponent;

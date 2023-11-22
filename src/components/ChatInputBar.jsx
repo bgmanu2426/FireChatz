@@ -7,7 +7,7 @@ import React from "react";
 import { TbSend } from "react-icons/tb";
 import { v4 as uuidv4 } from "uuid";
 
-const ComposebarComponent = () => {
+const ChatInputBarComponent = () => {
     const { inputText, setInputText, data, attachment, setAttachment, setAttachmentPreview } = useChatContext();
     const { currentUser } = useAuth();
 
@@ -114,4 +114,4 @@ const ComposebarComponent = () => {
     );
 };
 
-export default ComposebarComponent;
+export default ChatInputBarComponent;

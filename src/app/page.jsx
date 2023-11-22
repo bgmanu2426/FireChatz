@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "../components/Loader";
 import LeftNavComponent from "../components/LeftNav";
-import UserChatsComponent from "@/components/UserChats";
+import UserChatsListComponent from "@/components/UserChatsList";
 import ChatComponent from "@/components/Chat";
 import { useChatContext } from "@/contexts/chatContext";
 
@@ -28,7 +28,7 @@ const Home = () => {
           <div className="flex bg-c2 grow">
             <div className="w-[400px] p-5 overflow-auto scrollbar shrink-0 border-r border-white/[0.05]">
               <div className="flex flex-col h-full">
-                <UserChatsComponent />
+                <UserChatsListComponent />
               </div>
             </div>
             {data.user && <ChatComponent />}
