@@ -6,17 +6,18 @@ import UserMessageComponent from "./UserMessage";
 import { useAuth } from "@/contexts/authContext";
 
 const MessagesComponent = () => {
-    const { data } = useChatContext();
+    const { data, isTyping, setIsTyping } = useChatContext();
     const { currentUser } = useAuth();
 
     const [messages, setMessages] = useState([]);
     const ref = useRef()
 
     useEffect(() => {
-        const unsub = onSnapshot(doc(db, "chats", data.chatId),
+        const unsub = onSnapshot(doc(db, "chats", data?.chatId),
             (doc) => {
                 if (doc.exists()) {
                     setMessages(doc.data().messages);
+                    setIsTyping(doc.data().typing?.[data?.user?.userId] || false);
                 }
 
                 setTimeout(() => {
@@ -24,7 +25,7 @@ const MessagesComponent = () => {
                 }, 0);
             });
         return () => unsub();
-    }, [data.chatId]);
+    }, [data.chatId, data.user.userId, setIsTyping]);
 
     const scrollToBottom = () => {
         const chatContainer = ref.current;
