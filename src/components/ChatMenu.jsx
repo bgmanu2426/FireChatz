@@ -2,7 +2,6 @@ import { useAuth } from "@/contexts/authContext";
 import { useChatContext } from "@/contexts/chatContext";
 import { db } from "@/firebase/firebase";
 import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
 import ClickAwayListener from "react-click-away-listener";
 
 const ChatMenuComponent = (props) => {
@@ -48,7 +47,7 @@ const ChatMenuComponent = (props) => {
                 messages: updatedMessages
             }); // Update messages
 
-            await updateDoc(doc(db, "userChts", currentUser?.userId), {
+            await updateDoc(doc(db, "userChats", currentUser?.userId), {
                 [data?.chatId + ".chatDeleted"]: true
             }); // Update userChats
 

@@ -51,16 +51,18 @@ const SearchComponent = (props) => {
                 }
                 await updateDoc(doc(db, "userChats", user.userId), {
                     [combinedId + ".userInfo"]: {
-                        userId: currentUser.userId,
-                        username: currentUser.username,
-                        email: currentUser.email,
-                        photoURL: currentUser.photoURL || null,
-                        color: currentUser.color,
+                        userId: currentUser?.userId,
+                        username: currentUser?.username,
+                        email: currentUser?.email,
+                        photoURL: currentUser?.photoURL || null,
+                        color: currentUser?.color,
                     },
                     [combinedId + ".messagingFrom"]: serverTimestamp(),
                 });
             } else {
-                // If chat exists, open it
+                await updateDoc(doc(db, "userChats", currentUser.userId), {
+                    [combinedId + ".chatDeleted"]: deleteField(),
+                })
             }
 
             setUsername("");

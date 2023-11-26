@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/authContext";
 import { useChatContext } from "@/contexts/chatContext";
 import { db, storage } from "@/firebase/firebase";
-import { Timestamp, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import { Timestamp, arrayUnion, deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import React, { useEffect } from "react";
 import { TbSend } from "react-icons/tb";
@@ -105,6 +105,7 @@ const ChatInputBarComponent = () => {
             await updateDoc(doc(db, "userChats", data.user.userId), {
                 [data.chatId + ".lastMessage"]: Msg,
                 [data.chatId + ".messagingFrom"]: Timestamp.now(),
+                [data.chatId + ".chatDeleted"]: deleteField(),
             });
 
             setInputText("");

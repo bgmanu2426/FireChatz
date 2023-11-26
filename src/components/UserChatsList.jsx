@@ -1,7 +1,7 @@
 import { useChatContext } from "@/contexts/chatContext";
 import { db } from "@/firebase/firebase";
 import { Timestamp, collection, doc, getDoc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import AvatarComponent from "./Avatar";
 import { useAuth } from "@/contexts/authContext";
@@ -16,12 +16,12 @@ const UserChatsListComponent = () => {
     const { currentUser } = useAuth();
 
     // Uncomment this code to select first chat on first render
-    // const isBlockExecutableRef = useRef(false);
-    // const isUsersFetchedRef = useRef(false);
+    const isBlockExecutableRef = useRef(false);
+    const isUsersFetchedRef = useRef(false);
 
     useEffect(() => {
         resetFooterState();
-    }, [data?.chatId]);
+    }, [data.chatId]);
 
 
     useEffect(() => {
@@ -32,9 +32,9 @@ const UserChatsListComponent = () => {
                     updatedUsers[doc.id] = doc.data();
                 });
                 setUsers(updatedUsers);
-                // if (!isBlockExecutableRef.current) {
-                //     isUsersFetchedRef.current = true;
-                // }
+                if (!isBlockExecutableRef.current) {
+                    isUsersFetchedRef.current = true;
+                }
             });
     }, [setUsers]);
 
@@ -50,10 +50,8 @@ const UserChatsListComponent = () => {
             snapshot.forEach((doc) => {
                 if (doc.id !== data.chatId) {
                     msgs[doc.id] = doc
-                        .data().messages
-                        .filter(
-                            (msg) => msg?.read === false && msg?.senderId !== currentUser.userId
-                        );
+                        .data()?.messages
+                        ?.filter(msg => msg?.read === false && msg?.sender !== currentUser?.userId);
                 }
                 Object.keys(msgs || {})?.map(c => {
                     if (msgs[c]?.length < 1) delete msgs[c];
@@ -72,15 +70,18 @@ const UserChatsListComponent = () => {
                     const data = doc.data();
                     setChats(data);
 
-                    // if (!isBlockExecutableRef.current && isUsersFetchedRef.current && users) {
-                    //     const firstChat = Object.values(data)
-                    //         .sort((a, b) => b.messagingFrom - a.messagingFrom)[0];
-                    //     if (firstChat) {
-                    //         const user = users[firstChat?.userInfo?.userId];
-                    //         handleSelect(user);
-                    //     }
-                    //     isBlockExecutableRef.current = true;
-                    // }
+                    if (!isBlockExecutableRef.current && isUsersFetchedRef.current && users) {
+                        const firstChat = Object.values(data)
+                            .filter((chat) => !chat?.hasOwnProperty("chatDeleted"))
+                            .sort((a, b) => b.messagingFrom - a.messagingFrom)[0];
+                        if (firstChat) {
+                            const user = users[firstChat?.userInfo?.userId];
+                            handleSelect(user);
+                            const chatId = currentUser?.userId > user?.userId ? currentUser?.userId + user?.userId : user?.userId + currentUser?.userId;
+                            readChats(chatId);
+                        }
+                        isBlockExecutableRef.current = true;
+                    }
                 }
             });
         }
@@ -88,6 +89,7 @@ const UserChatsListComponent = () => {
     }, [currentUser.userId, setChats]);
 
     const filteredUsers = Object.entries(chats || {})
+        .filter(([, chat]) => !chat?.hasOwnProperty("chatDeleted"))
         .filter(([, chat]) =>
             chat?.userInfo?.username
                 .toLowerCase()
@@ -143,9 +145,7 @@ const UserChatsListComponent = () => {
                         return (
                             <li
                                 key={chat[0]}
-                                onClick={() => handleSelect(
-                                    user, chat[0]
-                                )}
+                                onClick={() => handleSelect(user, chat[0])}
                                 className={`h-[90px] flex items-center gap-4 hover:bg-c1 p-4 cursor-pointer rounded-3xl ${selectedChat?.userId === user?.userId && "bg-c1"}`}
                             >
                                 <AvatarComponent size="large" user={user} />

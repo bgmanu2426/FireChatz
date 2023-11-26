@@ -3,7 +3,7 @@ import PopupWrapper from "./PopupWrapper";
 import { useAuth } from "@/contexts/authContext";
 import { useChatContext } from "@/contexts/chatContext";
 import AvatarComponent from "../Avatar";
-import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { deleteField, doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import SearchComponent from "../Search";
 
@@ -48,16 +48,18 @@ const UsersPopup = (props) => {
                 }
                 await updateDoc(doc(db, "userChats", user.userId), {
                     [combinedId + ".userInfo"]: {
-                        userId: currentUser.userId,
-                        username: currentUser.username,
-                        email: currentUser.email,
-                        photoURL: currentUser.photoURL || null,
-                        color: currentUser.color,
+                        userId: currentUser?.userId,
+                        username: currentUser?.username,
+                        email: currentUser?.email,
+                        photoURL: currentUser?.photoURL || null,
+                        color: currentUser?.color,
                     },
                     [combinedId + ".messagingFrom"]: serverTimestamp(),
                 });
             } else {
-                // If chat exists, open it
+                await updateDoc(doc(db, "userChats", currentUser.userId), {
+                    [combinedId + ".chatDeleted"]: deleteField(),
+                })
             }
 
             dispatch({

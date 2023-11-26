@@ -38,7 +38,11 @@ const MessagesComponent = () => {
             className="grow p-5 overflow-auto scrollbar flex flex-col"
         >
             {messages?.filter((m) => {
-                return m?.deletedInfo?.[currentUser.userId] !== "DELETED_FOR_ME" && !m?.deletedInfo?.deletedForEveryone
+                return (
+                    m?.deletedInfo?.[currentUser.userId] !== "DELETED_FOR_ME" &&
+                    !m?.deletedInfo?.deletedForEveryone &&
+                    !m?.deleteChatInfo?.[currentUser.userId]
+                )
             })?.map((msg) => {
                 return (
                     <UserMessageComponent key={msg.id} msg={msg} />
