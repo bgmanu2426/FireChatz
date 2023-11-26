@@ -1,6 +1,6 @@
 import { useChatContext } from "@/contexts/chatContext";
 import { db } from "@/firebase/firebase";
-import { Timestamp, collection, doc, onSnapshot } from "firebase/firestore";
+import { Timestamp, collection, doc, getDoc, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import AvatarComponent from "./Avatar";
@@ -9,13 +9,20 @@ import { formatDate } from "@/utils/helpers";
 
 const UserChatsListComponent = () => {
     const [search, setSearch] = useState("");
+    const [unreadMsgs, setUnreadMsgs] = useState({});
 
-    const { users, setUsers, chats, setChats, selectedChat, setSelectedChat, dispatch } = useChatContext();
+
+    const { users, setUsers, chats, setChats, selectedChat, setSelectedChat, dispatch, data, resetFooterState } = useChatContext();
     const { currentUser } = useAuth();
 
     // Uncomment this code to select first chat on first render
     // const isBlockExecutableRef = useRef(false);
     // const isUsersFetchedRef = useRef(false);
+
+    useEffect(() => {
+        resetFooterState();
+    }, [data?.chatId]);
+
 
     useEffect(() => {
         onSnapshot(collection(db, "users"),
@@ -30,6 +37,33 @@ const UserChatsListComponent = () => {
                 // }
             });
     }, [setUsers]);
+
+    useEffect(() => {
+        const documentIds = Object.keys(chats);
+        if (documentIds.length === 0) return;
+        const q = query(
+            collection(db, "chats"),
+            where("__name__", "in", documentIds)
+        ); // get chats by document ids
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            let msgs = {}
+            snapshot.forEach((doc) => {
+                if (doc.id !== data.chatId) {
+                    msgs[doc.id] = doc
+                        .data().messages
+                        .filter(
+                            (msg) => msg?.read === false && msg?.senderId !== currentUser.userId
+                        );
+                }
+                Object.keys(msgs || {})?.map(c => {
+                    if (msgs[c]?.length < 1) delete msgs[c];
+                });
+            });
+            setUnreadMsgs(msgs);
+        });
+        return () => unsubscribe();
+    }, [chats, currentUser.userId, data.chatId, selectedChat]);
+
 
     useEffect(() => {
         const getChats = () => {
@@ -64,9 +98,28 @@ const UserChatsListComponent = () => {
         ) // filter chats by search
         .sort((a, b) => b[1].messagingFrom - a[1].messagingFrom); // sort by last message
 
+    const readChats = async (chatsID) => {
+        const chatsRef = doc(db, "chats", chatsID);
+        const chatDoc = await getDoc(chatsRef);
+
+        let updatedMsgs = chatDoc?.data()?.messages?.map(msg => {
+            if (msg?.read === false) {
+                msg.read = true;
+            }
+            return msg;
+        })
+        await updateDoc(chatsRef, {
+            messages: updatedMsgs
+        });
+    }
+
     const handleSelect = (user, selectedChatId) => {
         setSelectedChat(user);
         dispatch({ type: "CHANGE_USER", payload: user });
+
+        if (unreadMsgs?.[selectedChatId]?.length) {
+            readChats(selectedChatId);
+        }
     }
 
     return (
@@ -104,7 +157,15 @@ const UserChatsListComponent = () => {
                                     <p className="text-sm text-c3 line-clamp-1 break-all">
                                         {chat[1].lastMessage?.text || (chat[1].lastMessage?.img && "image") || "Send first message"}
                                     </p>
-                                    <span className="absolute right-0 top-8 min-w-[18px] h-[18px] rounded-full bg-red-500 flex items-center justify-center text-sm">5</span>
+                                    {
+                                        unreadMsgs?.[chat[0]]?.length && (
+                                            <span
+                                                className="absolute right-0 top-8 min-w-[18px] h-[18px] rounded-full bg-red-500 flex items-center justify-center text-sm"
+                                            >
+                                                {unreadMsgs?.[chat[0]]?.length}
+                                            </span>
+                                        )
+                                    }
                                 </div>
                             </li>
                         )

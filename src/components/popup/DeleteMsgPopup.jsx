@@ -19,6 +19,15 @@ const DeleteMsgPopupComponent = (props) => {
                     <div className="text-lg">Are you sure you want to delete message?</div>
                 </div>
                 <div className="flex items-center justify-center gap-2 mt-10">
+                    <button
+                        onClick={() => {
+                            props.deleteMessage(DELETED_FOR_EVERYONE);
+                        }}
+                        className="border-[2px] border-red-700 py-2 px-4 rounded-md text-sm text-red-500 hover:bg-red-700 hover:text-white"
+                    >
+                        Delete for everyone
+                    </button>
+
                     {
                         props.self && <button
                             onClick={() => {
@@ -29,15 +38,6 @@ const DeleteMsgPopupComponent = (props) => {
                             Delete for me
                         </button>
                     }
-
-                    <button
-                        onClick={() => {
-                            props.deleteMessage(DELETED_FOR_EVERYONE);
-                        }}
-                        className="border-[2px] border-red-700 py-2 px-4 rounded-md text-sm text-red-500 hover:bg-red-700 hover:text-white"
-                    >
-                        Delete for everyone
-                    </button>
 
                     <button
                         onClick={() => {

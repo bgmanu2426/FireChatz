@@ -18,6 +18,14 @@ export const ChatProvider = ({ children }) => {
 
     const { currentUser } = useAuth();
 
+    const resetFooterState = () => {
+        setInputText("");
+        setAttachment(null);
+        setAttachmentPreview(null);
+        setEditMessage(null);
+        setImageViewer(null);
+    }
+
     const INITIAL_STATE = {
         chatId: "",
         user: null,
@@ -58,7 +66,8 @@ export const ChatProvider = ({ children }) => {
             isTyping,
             setIsTyping,
             imageViewer,
-            setImageViewer
+            setImageViewer,
+            resetFooterState
         }}>
             {children}
         </ChatContext.Provider>
