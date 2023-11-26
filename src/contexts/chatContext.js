@@ -38,6 +38,8 @@ export const ChatProvider = ({ children }) => {
                     user: action.payload,
                     chatId: currentUser.userId > action.payload.userId ? currentUser.userId + action.payload.userId : action.payload.userId + currentUser.userId
                 }
+            case "EMPTY":
+                return INITIAL_STATE;
             default:
                 return state;
         }
